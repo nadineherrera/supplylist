@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Alchemy Body Werks — Supply Checklist</title>
+<style>
+  :root{
+    --bg: #0b0b0c;        /* page background */
+    --card: #111217;      /* card background */
+    --muted: #e6e6e6;
+    --ring: rgba(255,255,255,0.12);
+    --shadow: 0 10px 25px rgba(0,0,0,.35);
+    --radius: 16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    background:linear-gradient(180deg,#0b0b0c 0%, #12131a 100%); color:#fafafa;
+  }
+  .wrap{max-width:1100px; margin:36px auto; padding:0 20px;}
+  header{display:flex; flex-wrap:wrap; align-items:center; gap:12px; justify-content:space-between; margin-bottom:18px}
+  h1{font-size:28px; letter-spacing:.3px; margin:0}
+  .toolbar{display:flex; gap:10px; flex-wrap:wrap}
+  .btn{
+    appearance:none; border:1px solid var(--ring); background:#1a1c24; color:#fff;
+    padding:10px 14px; border-radius:12px; cursor:pointer; box-shadow:var(--shadow);
+  }
+  .btn:hover{background:#212432}
+  .search{
+    flex:1 1 260px; min-width:220px; background:#12131a; color:#fff; border:1px solid var(--ring);
+    border-radius:12px; padding:12px 14px; outline:none;
+  }
+
+  .grid{display:grid; gap:16px; grid-template-columns:repeat(12,1fr)}
+  @media (max-width:1000px){ .grid{grid-template-columns:repeat(6,1fr)} }
+  @media (max-width:640px){ .grid{grid-template-columns:repeat(1,1fr)} }
+
+  .card{
+    grid-column: span 6;
+    background:var(--card); border:1px solid var(--ring);
+    border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+  }
+  .head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; color:#fff;
+  }
+  .head h2{margin:0; font-size:18px; font-weight:700; letter-spacing:.2px}
+  .meta{font-size:12px; opacity:.9}
+  .actions{display:flex; gap:8px; flex-wrap:wrap}
+  .chip{background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.28); color:#fff; padding:8px 10px; border-radius:999px; cursor:pointer; font-size:12px}
+  .chip:hover{background:rgba(255,255,255,.26)}
+  .items{padding:12px 16px}
+  .item{display:flex; align-items:flex-start; gap:10px; padding:10px 8px; border-bottom:1px dashed rgba(255,255,255,.06)}
+  .item:last-child{border-bottom:none}
+  .item input[type="checkbox"]{
+    width:18px; height:18px; margin-top:2px; accent-color:#ffffff;
+    border:1px solid #fff; cursor:pointer;
+  }
+  .label{color:var(--muted)}
+  .strike{opacity:.55; text-decoration:line-through}
+  /* colorful headers */
+  .emerald{background:linear-gradient(90deg,#059669,#10b981)}
+  .sky{background:linear-gradient(90deg,#0284c7,#38bdf8)}
+  .amber{background:linear-gradient(90deg,#d97706,#f59e0b)}
+  .fuchsia{background:linear-gradient(90deg,#a21caf,#e879f9)}
+  .rose{background:linear-gradient(90deg,#be123c,#fb7185)}
+  .indigo{background:linear-gradient(90deg,#4338ca,#6366f1)}
+  .teal{background:linear-gradient(90deg,#0f766e,#14b8a6)}
+  .orange{background:linear-gradient(90deg,#c2410c,#fb923c)}
+  .violet{background:linear-gradient(90deg,#6d28d9,#a78bfa)}
+  .lime{background:linear-gradient(90deg,#4d7c0f,#a3e635)}
+  .cyan{background:linear-gradient(90deg,#0e7490,#22d3ee)}
+  .pill{
+    display:inline-block; padding:4px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.35);
+    background:rgba(255,255,255,.18); font-size:12px; margin-left:8px
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Alchemy Body Werks <span class="pill">Supply Checklist</span></h1>
+      <div class="toolbar">
+        <input id="search" class="search" placeholder="Search items… (e.g., jojoba, risers, rosemary)" />
+        <button class="btn" id="resetAll">Reset all</button>
+      </div>
+    </header>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+<script>
+/* ---------- Data: Sections & Items ---------- */
+const SECTIONS = [
+  { id:"oils",   title:"Oils & Butters (Carrier Oils)", color:"emerald", items:[
+    "Olive oil","Coconut oil","Almond oil","Shea butter","Jamaican castor oil",
+    "Apricot oil","Argan oil","Fractionated coconut oil","Grape seed oil",
+    "Castor oil","Jojoba oil","Vitamin E (tocopherol)"
+  ]},
+  { id:"lye",    title:"Lye & Water", color:"sky", items:[
+    "Sodium hydroxide (lye)","Distilled water"
+  ]},
+  { id:"botanicals", title:"Botanicals & Add-ins", color:"amber", items:[
+    "Oatmeal","Chamomile tea","Pink Himalayan salt","Activated charcoal","Coffee","Turmeric","Paprika"
+  ]},
+  { id:"eos",    title:"Essential Oils", color:"fuchsia", items:[
+    "Lavender essential oil","Tea tree essential oil","Orange essential oil","Peppermint essential oil","Rosemary essential oil"
+  ]},
+  { id:"candles",title:"Candles & Wicks", color:"rose", items:[
+    "Soy wax","Wood wicks","Wick clips","Wick clip stickers","Candle jars/containers","Candle warning labels"
+  ]},
+  { id:"fragrances", title:"Fragrance Oils", color:"indigo", items:[
+    "Cashmere","YSL L’Homme","Sex on the Beach","Invictus Legend","Frankincense & Myrrh","Moonlight Pomegranate"
+  ]},
+  { id:"incense", title:"Incense Supplies", color:"teal", items:[
+    "Incense sticks (unscented)","Fragrance oils (shared list above, plus incense-specific blends)",
+    "Beakers (glass or heat-resistant)","Beaker rack (for drying/holding)","Incense stick holders"
+  ]},
+  { id:"pack",   title:"Packaging & Shipping Supplies", color:"orange", items:[
+    "Shipping tape","Shipping boxes","Dymo shipping labels","Black kraft paper","8x10 printer paper",
+    "Black kraft soap boxes","Soap labels","Body oil labels","Body butter labels","Lip balm labels","Candle labels",
+    "Amber bottles (for body oils)","Amber containers (for body butters)","Kraft lip balm containers",
+    "Sisal soap pouches","Soap dishes","Soap savers"
+  ]},
+  { id:"tools",  title:"Tools & Equipment", color:"violet", items:[
+    "Digital scale","Stick blender","Mixing bowls (stainless or heat-resistant)","Pouring pitchers (soap & wax)",
+    "Measuring cups/spoons","Soap loaf molds","Heat gun","Thermometer (infrared or candy)",
+    "Spatulas & whisks","Soap cutter (single or multi-bar)","Label printer (Dymo or equivalent)","Storage racks/shelves",
+    "Scissors","Pens","Soap stamp","Rubber mallet","Baking sheets / drying trays"
+  ]},
+  { id:"safety", title:"Safety & Cleaning", color:"lime", items:[
+    "Respirator (for fragrance/lye safety)","Plastic gloves","Goggles","Apron/protective clothing","Paper towels","Vinegar (for lye neutralizing)"
+  ]},
+  { id:"events", title:"Business & Event Supplies", color:"cyan", items:[
+    "Business cards","Thank-you cards","Shopping bags (for events)","Sticker or ink stamp (for bags)",
+    "Tablecloths","Display risers","Price signs","Event banner","Card reader (Square or Shopify)","Notebook/clipboard"
+  ]},
+];
+
+/* ---------- Storage helpers ---------- */
+const STORAGE_KEY = "abw-supply-checks-v1";
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return {};
+    return JSON.parse(raw) || {};
+  }catch(e){ return {}; }
+}
+function saveState(state){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+/* ---------- Render ---------- */
+const grid = document.getElementById("grid");
+const search = document.getElementById("search");
+const resetAllBtn = document.getElementById("resetAll");
+let STATE = loadState();
+
+function getChecked(sectionId, item){
+  return !!(STATE[sectionId] && STATE[sectionId][item]);
+}
+function setChecked(sectionId, item, val){
+  if(!STATE[sectionId]) STATE[sectionId] = {};
+  STATE[sectionId][item] = !!val;
+  saveState(STATE);
+}
+
+function setAll(sectionId, val){
+  const sec = SECTIONS.find(s=>s.id===sectionId);
+  if(!sec) return;
+  if(!STATE[sectionId]) STATE[sectionId] = {};
+  sec.items.forEach(it => STATE[sectionId][it] = !!val);
+  saveState(STATE);
+  render(); // refresh counts & styles
+}
+
+function resetAll(){
+  STATE = {};
+  saveState(STATE);
+  render();
+}
+
+function sectionProgress(section){
+  const total = section.items.length;
+  let done = 0; section.items.forEach(it => { if(getChecked(section.id, it)) done++; });
+  return {done, total};
+}
+
+function render(){
+  const q = (search.value || "").trim().toLowerCase();
+  grid.innerHTML = "";
+  SECTIONS.forEach(section=>{
+    const {done,total} = sectionProgress(section);
+    // card
+    const card = document.createElement("section");
+    card.className = "card";
+
+    // head
+    const head = document.createElement("div");
+    head.className = `head ${section.color}`;
+    const h2 = document.createElement("h2");
+    h2.textContent = section.title;
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = `${done}/${total} done`;
+    const headLeft = document.createElement("div");
+    headLeft.style.display = "flex";
+    headLeft.style.alignItems = "center";
+    headLeft.style.gap = "8px";
+    headLeft.appendChild(h2);
+    const actions = document.createElement("div");
+    actions.className = "actions";
+    const all = document.createElement("button");
+    all.className = "chip"; all.textContent = "Check all";
+    all.onclick = ()=> setAll(section.id, true);
+    const none = document.createElement("button");
+    none.className = "chip"; none.textContent = "Uncheck";
+    none.onclick = ()=> setAll(section.id, false);
+    actions.appendChild(all); actions.appendChild(none);
+
+    head.appendChild(headLeft); head.appendChild(meta); head.appendChild(actions);
+    card.appendChild(head);
+
+    // items
+    const list = document.createElement("div");
+    list.className = "items";
+    section.items.forEach(item=>{
+      if(q && !item.toLowerCase().includes(q)) return;
+      const row = document.createElement("label");
+      row.className = "item";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = getChecked(section.id, item);
+      cb.onchange = (e)=> {
+        setChecked(section.id, item, e.target.checked);
+        // update progress live
+        meta.textContent = `${sectionProgress(section).done}/${section.items.length} done`;
+        nameEl.className = "label " + (e.target.checked ? "strike" : "");
+      };
+      const nameEl = document.createElement("div");
+      nameEl.className = "label " + (cb.checked ? "strike" : "");
+      nameEl.textContent = item;
+
+      row.appendChild(cb);
+      row.appendChild(nameEl);
+      list.appendChild(row);
+    });
+    card.appendChild(list);
+
+    grid.appendChild(card);
+  });
+}
+
+search.addEventListener("input", render);
+resetAllBtn.addEventListener("click", resetAll);
+render();
+</script>
+</body>
+</html>
